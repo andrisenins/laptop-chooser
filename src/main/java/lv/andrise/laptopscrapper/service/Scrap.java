@@ -1,25 +1,31 @@
 package lv.andrise.laptopscrapper.service;
 
 import lv.andrise.laptopscrapper.model.Laptop;
+import lv.andrise.laptopscrapper.model.repositories.LaptopRepository;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * Created by andris on 15.24.8.
  */
-@SuppressWarnings("CanBeFinal")
 @Service
 public class Scrap {
+
+    @Autowired
+    private LaptopRepository laptopRepository;
 
     private final Logger log = LoggerFactory.getLogger(Scrap.class);
 
@@ -27,8 +33,7 @@ public class Scrap {
     private final String regex2 = "(^/.*ladetaji.*|^/.*dzesetaji.*|^/.*garantija.*|^/.*sledzene.*|^/.*citi.*|^/.*somas.*|^/.*baterija.*)";
     private final String regex3 = "^/datortehnika/portativiedatori/\\d+";
     private final String regex4 = "<span>Portatīvie datori (\\d+).*";
-//    String moneyRegex = "\\d+\\.\\d+";
-private final String moneyRegex = "€";
+    private final String moneyRegex = "€";  // Regex for removing euro sign from string
     private final Pattern pattern = Pattern.compile(regex);
     private final Pattern unimportantPageRegex = Pattern.compile(regex2);
     private final Pattern pageNumberRegex = Pattern.compile(regex3);
@@ -39,6 +44,7 @@ private final String moneyRegex = "€";
         Set<Laptop> laptopList = new HashSet<>();
         Set<String> urls = scrapPageList();
         urls.parallelStream().forEach(s -> laptopList.add(scrapPage(s)));
+        laptopRepository.save(laptopList);
         return laptopList;
     }
 
@@ -55,21 +61,24 @@ private final String moneyRegex = "€";
             double newPriceE;
             double oldPriceE;
             Element body = doc.body();
+            // TODO: Add non discount handling
             laptop.setNosaukums(body.select("div.product-title-container h2").text());
             Elements select = body.select("div.discount-box, .discount-box-lat");
             if (!select.isEmpty()) {
                 String[] newPrice = priceRegex.split(select.select("strong.new-price").text());
-                if(newPrice.length > 0) {
+                if (newPrice.length > 0) {
                     newPriceE = Double.parseDouble(newPrice[0]);
                     laptop.setAktualaCena(newPriceE);
                 }
                 String[] oldPrice = priceRegex.split(select.select("strong.old-price").text());
-                if(oldPrice.length > 0) {
+                if (oldPrice.length > 0) {
                     oldPriceE = Double.parseDouble(oldPrice[0]);
                     laptop.setVecaCena(oldPriceE);
                 }
             }
+            // TODO: Add other field handling
         }
+        log.info("Added {} to the list with new price {} and old price {}", laptop.getNosaukums(), laptop.getAktualaCena(), laptop.getVecaCena());
         return laptop;
     }
 

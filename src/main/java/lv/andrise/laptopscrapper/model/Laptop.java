@@ -2,22 +2,19 @@ package lv.andrise.laptopscrapper.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
  * Created by andris on 15.23.8.
  */
-
 @Entity
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Laptop {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "laptop_id_seq", sequenceName = "laptop_id_seq", initialValue = 1, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "laptop_id_seq")
     private long id;
     private String nosaukums;
     private String razotajs;
@@ -74,6 +71,78 @@ public class Laptop {
     private double vecaCena;
     private String url;
     private Date ierakstaDatums;
+
+    public Laptop() {
+    }
+
+    public Laptop(String nosaukums, String razotajs, String datoraTips, String ekranaIzmers, String ekranaTips,
+                  String IPSEkrans, String maksIzskirtspeja, String procesoraSaime, String procesoraPaaudze,
+                  String procesors, String procesoraKodoluSkaits, String cache, String chipset, String uzstaditaisRam,
+                  String maxRam, String ramType, int ramSlots, String HDDSize, String HDDSpeed, String SSDSize,
+                  String videocardType, String videocard, String videocardMemory, String wifi, boolean g3, boolean g4,
+                  boolean bluetooth, boolean NFC, boolean wiDi, String USBPorti, boolean HDMI, String interfeiss,
+                  boolean CDRom, String audio, String tiklaKarte, boolean builtInWebcam, boolean builtInMic,
+                  String builtInCardReader, String klaviaturasValodas, boolean klaviaturasApgaismojums,
+                  boolean mitrumdrosaKlaviatura, String korpusaMaterials, String korpusaKrasa, String izmeri,
+                  String svars, String operetajSistema, String standartaBaterija, String baterijasDarbibasLaiks,
+                  String drosoba, String ipashasatzimes, String veikals, double aktualaCena, double vecaCena,
+                  String url, Date ierakstaDatums) {
+        this.nosaukums = nosaukums;
+        this.razotajs = razotajs;
+        this.datoraTips = datoraTips;
+        this.ekranaIzmers = ekranaIzmers;
+        this.ekranaTips = ekranaTips;
+        this.IPSEkrans = IPSEkrans;
+        this.maksIzskirtspeja = maksIzskirtspeja;
+        this.procesoraSaime = procesoraSaime;
+        this.procesoraPaaudze = procesoraPaaudze;
+        this.procesors = procesors;
+        this.procesoraKodoluSkaits = procesoraKodoluSkaits;
+        this.cache = cache;
+        this.chipset = chipset;
+        this.uzstaditaisRam = uzstaditaisRam;
+        this.maxRam = maxRam;
+        this.ramType = ramType;
+        this.ramSlots = ramSlots;
+        this.HDDSize = HDDSize;
+        this.HDDSpeed = HDDSpeed;
+        this.SSDSize = SSDSize;
+        this.videocardType = videocardType;
+        this.videocard = videocard;
+        this.videocardMemory = videocardMemory;
+        Wifi = wifi;
+        this.g3 = g3;
+        this.g4 = g4;
+        Bluetooth = bluetooth;
+        this.NFC = NFC;
+        WiDi = wiDi;
+        this.USBPorti = USBPorti;
+        this.HDMI = HDMI;
+        Interfeiss = interfeiss;
+        this.CDRom = CDRom;
+        this.audio = audio;
+        this.tiklaKarte = tiklaKarte;
+        this.builtInWebcam = builtInWebcam;
+        this.builtInMic = builtInMic;
+        this.builtInCardReader = builtInCardReader;
+        this.klaviaturasValodas = klaviaturasValodas;
+        this.klaviaturasApgaismojums = klaviaturasApgaismojums;
+        this.mitrumdrosaKlaviatura = mitrumdrosaKlaviatura;
+        this.korpusaMaterials = korpusaMaterials;
+        this.korpusaKrasa = korpusaKrasa;
+        this.izmeri = izmeri;
+        this.svars = svars;
+        this.operetajSistema = operetajSistema;
+        this.standartaBaterija = standartaBaterija;
+        this.baterijasDarbibasLaiks = baterijasDarbibasLaiks;
+        this.drosoba = drosoba;
+        this.ipashasatzimes = ipashasatzimes;
+        this.veikals = veikals;
+        this.aktualaCena = aktualaCena;
+        this.vecaCena = vecaCena;
+        this.url = url;
+        this.ierakstaDatums = ierakstaDatums;
+    }
 
     public long getId() {
         return id;
@@ -521,5 +590,67 @@ public class Laptop {
 
     public void setVecaCena(double vecaCena) {
         this.vecaCena = vecaCena;
+    }
+
+    @Override
+    public String toString() {
+        return "Laptop{" +
+                "id=" + id +
+                ", nosaukums='" + nosaukums + '\'' +
+                ", razotajs='" + razotajs + '\'' +
+                ", datoraTips='" + datoraTips + '\'' +
+                ", ekranaIzmers='" + ekranaIzmers + '\'' +
+                ", ekranaTips='" + ekranaTips + '\'' +
+                ", IPSEkrans='" + IPSEkrans + '\'' +
+                ", maksIzskirtspeja='" + maksIzskirtspeja + '\'' +
+                ", procesoraSaime='" + procesoraSaime + '\'' +
+                ", procesoraPaaudze='" + procesoraPaaudze + '\'' +
+                ", procesors='" + procesors + '\'' +
+                ", procesoraKodoluSkaits='" + procesoraKodoluSkaits + '\'' +
+                ", cache='" + cache + '\'' +
+                ", chipset='" + chipset + '\'' +
+                ", uzstaditaisRam='" + uzstaditaisRam + '\'' +
+                ", maxRam='" + maxRam + '\'' +
+                ", ramType='" + ramType + '\'' +
+                ", ramSlots=" + ramSlots +
+                ", HDDSize='" + HDDSize + '\'' +
+                ", HDDSpeed='" + HDDSpeed + '\'' +
+                ", SSDSize='" + SSDSize + '\'' +
+                ", videocardType='" + videocardType + '\'' +
+                ", videocard='" + videocard + '\'' +
+                ", videocardMemory='" + videocardMemory + '\'' +
+                ", Wifi='" + Wifi + '\'' +
+                ", g3=" + g3 +
+                ", g4=" + g4 +
+                ", Bluetooth=" + Bluetooth +
+                ", NFC=" + NFC +
+                ", WiDi=" + WiDi +
+                ", USBPorti='" + USBPorti + '\'' +
+                ", HDMI=" + HDMI +
+                ", Interfeiss='" + Interfeiss + '\'' +
+                ", CDRom=" + CDRom +
+                ", audio='" + audio + '\'' +
+                ", tiklaKarte='" + tiklaKarte + '\'' +
+                ", builtInWebcam=" + builtInWebcam +
+                ", builtInMic=" + builtInMic +
+                ", builtInCardReader='" + builtInCardReader + '\'' +
+                ", klaviaturasValodas='" + klaviaturasValodas + '\'' +
+                ", klaviaturasApgaismojums=" + klaviaturasApgaismojums +
+                ", mitrumdrosaKlaviatura=" + mitrumdrosaKlaviatura +
+                ", korpusaMaterials='" + korpusaMaterials + '\'' +
+                ", korpusaKrasa='" + korpusaKrasa + '\'' +
+                ", izmeri='" + izmeri + '\'' +
+                ", svars='" + svars + '\'' +
+                ", operetajSistema='" + operetajSistema + '\'' +
+                ", standartaBaterija='" + standartaBaterija + '\'' +
+                ", baterijasDarbibasLaiks='" + baterijasDarbibasLaiks + '\'' +
+                ", drosoba='" + drosoba + '\'' +
+                ", ipashasatzimes='" + ipashasatzimes + '\'' +
+                ", veikals='" + veikals + '\'' +
+                ", aktualaCena=" + aktualaCena +
+                ", vecaCena=" + vecaCena +
+                ", url='" + url + '\'' +
+                ", ierakstaDatums=" + ierakstaDatums +
+                '}';
     }
 }

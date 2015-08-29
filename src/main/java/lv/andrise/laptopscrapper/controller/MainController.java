@@ -18,7 +18,7 @@ import java.util.Set;
 public class MainController {
 
     @Autowired
-    Scrap scrap;
+    private Scrap scrap;
 
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
