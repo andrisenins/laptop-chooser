@@ -48,7 +48,7 @@ public class Scrap {
         return laptopList;
     }
 
-    private Laptop scrapPage(String url) {
+    public Laptop scrapPage(String url) {
         Laptop laptop = new Laptop();
         Document doc = null;
         try {
@@ -61,7 +61,6 @@ public class Scrap {
             double newPriceE;
             double oldPriceE;
             Element body = doc.body();
-            // TODO: Add non discount handling
             laptop.setNosaukums(body.select("div.product-title-container h2").text());
             Elements select = body.select("div.discount-box, .discount-box-lat");
             if (!select.isEmpty()) {
@@ -75,10 +74,87 @@ public class Scrap {
                     oldPriceE = Double.parseDouble(oldPrice[0]);
                     laptop.setVecaCena(oldPriceE);
                 }
+                log.info("Discount laptop {}  added to the list with new price {} and old price {}", laptop.getNosaukums(), laptop.getAktualaCena(), laptop.getVecaCena());
             }
+            if (select.isEmpty()) {
+                Elements selectNoDiscount = body.select("div.price-box, .price-box-lat");
+                if (!selectNoDiscount.isEmpty()) {
+                    newPriceE = Double.parseDouble(selectNoDiscount.select("span").text());
+                    laptop.setAktualaCena(newPriceE);
+                }
+                log.info("Laptop {}  added to the list with new price {} and old price {}", laptop.getNosaukums(), laptop.getAktualaCena(), laptop.getVecaCena());
+            }
+            Elements name = body.select("div#tab1, table.characteristics-table");
+
+            Elements tableRows = name.get(1).select("tr");
+//            tableRows.next().child(1).text();
+            String[] rows = tableRows.toString().split("</tr>");
+            int rowCounter = 1;
+            for (String row : rows) {
+                String[] splitColumns = row.split("</td>");
+                if(splitColumns.length > 1) {
+//                    System.out.println(splitColumns[1].substring(8));
+                    switch (rowCounter) {
+                        case 2: laptop.setRazotajs(splitColumns[1].substring(8).trim());
+                            break;
+                        case 3: laptop.setDatoraTips(splitColumns[1].substring(8).trim());
+                            break;
+                        case 5: laptop.setEkranaIzmers(splitColumns[1].substring(8).trim().replace("\\", ""));
+                            break;
+                        case 6: laptop.setEkranaTips(splitColumns[1].substring(8).trim());
+                            break;
+                        case 7: laptop.setIPSEkrans(splitColumns[1].substring(8).trim());
+                            break;
+                        case 8: laptop.setMaksIzskirtspeja(splitColumns[1].substring(8).trim());
+                            break;
+                        case 10: laptop.setProcesoraSaime(splitColumns[1].substring(8).trim());
+                            break;
+                        case 12: laptop.setProcesoraPaaudze(splitColumns[1].substring(8).trim());
+                            break;
+                        case 13: laptop.setProcesoraKodoluSkaits(splitColumns[1].substring(8).trim());
+                            break;
+                        case 14: laptop.setCache(splitColumns[1].substring(8).trim());
+                            break;
+                        case 15: laptop.setChipset(splitColumns[1].substring(8).trim());
+                            break;
+                        case 17: laptop.setUzstaditaisRam(splitColumns[1].substring(8).trim());
+                            break;
+                        case 18: laptop.setMaxRam(splitColumns[1].substring(8).trim());
+                            break;
+                        case 19: laptop.setRamType(splitColumns[1].substring(8).trim());
+                            break;
+                        case 20: laptop.setRamSlots(Integer.parseInt(splitColumns[1].substring(8).trim()));
+                            break;
+                        case 22: laptop.setHDDSize(splitColumns[1].substring(8).trim());
+                            break;
+                        case 23: laptop.setHDDSpeed(splitColumns[1].substring(8).trim());
+                            break;
+                        case 24: laptop.setSSDSize(splitColumns[1].substring(8).trim());
+                            break;
+                        case 26: laptop.setVideocardType(splitColumns[1].substring(8).trim());
+                            break;
+                        case 27: laptop.setVideocard(splitColumns[1].substring(8).trim());
+                            break;
+                        case 28: laptop.setVideocardMemory(splitColumns[1].substring(8).trim());
+                            break;
+                        case 30: laptop.setWifi(splitColumns[1].substring(8).trim());
+                            break;
+                        case 31: if(splitColumns[1].substring(8).trim().equals("Jā")) {
+                            laptop.setG3(true);
+                        };
+                            break;
+                        case 32: if(splitColumns[1].substring(8).trim().equals("Jā")) {
+                            laptop.setG4(true);
+                        };
+                            break;
+                    }
+                }
+                rowCounter ++;
+            }
+
+//            System.out.println(url);
             // TODO: Add other field handling
         }
-        log.info("Added {} to the list with new price {} and old price {}", laptop.getNosaukums(), laptop.getAktualaCena(), laptop.getVecaCena());
         return laptop;
     }
 
