@@ -64,7 +64,8 @@ public class Laptop {
     private String operetajSistema;
     private String standartaBaterija;
     private String baterijasDarbibasLaiks;
-    private String drosoba;
+    private String drosiba;
+    @Column(columnDefinition="TEXT")
     private String ipashasatzimes;
     private String veikals;
     private double aktualaCena;
@@ -85,7 +86,7 @@ public class Laptop {
                   String builtInCardReader, String klaviaturasValodas, boolean klaviaturasApgaismojums,
                   boolean mitrumdrosaKlaviatura, String korpusaMaterials, String korpusaKrasa, String izmeri,
                   String svars, String operetajSistema, String standartaBaterija, String baterijasDarbibasLaiks,
-                  String drosoba, String ipashasatzimes, String veikals, double aktualaCena, double vecaCena,
+                  String drosiba, String ipashasatzimes, String veikals, double aktualaCena, double vecaCena,
                   String url, Date ierakstaDatums) {
         this.nosaukums = nosaukums;
         this.razotajs = razotajs;
@@ -135,7 +136,7 @@ public class Laptop {
         this.operetajSistema = operetajSistema;
         this.standartaBaterija = standartaBaterija;
         this.baterijasDarbibasLaiks = baterijasDarbibasLaiks;
-        this.drosoba = drosoba;
+        this.drosiba = drosiba;
         this.ipashasatzimes = ipashasatzimes;
         this.veikals = veikals;
         this.aktualaCena = aktualaCena;
@@ -536,12 +537,12 @@ public class Laptop {
         this.baterijasDarbibasLaiks = baterijasDarbibasLaiks;
     }
 
-    public String getDrosoba() {
-        return drosoba;
+    public String getDrosiba() {
+        return drosiba;
     }
 
-    public void setDrosoba(String drosoba) {
-        this.drosoba = drosoba;
+    public void setDrosiba(String drosiba) {
+        this.drosiba = drosiba;
     }
 
     public String getIpashasatzimes() {
@@ -644,7 +645,7 @@ public class Laptop {
                 ", operetajSistema='" + operetajSistema + '\'' +
                 ", standartaBaterija='" + standartaBaterija + '\'' +
                 ", baterijasDarbibasLaiks='" + baterijasDarbibasLaiks + '\'' +
-                ", drosoba='" + drosoba + '\'' +
+                ", drosiba='" + drosiba + '\'' +
                 ", ipashasatzimes='" + ipashasatzimes + '\'' +
                 ", veikals='" + veikals + '\'' +
                 ", aktualaCena=" + aktualaCena +

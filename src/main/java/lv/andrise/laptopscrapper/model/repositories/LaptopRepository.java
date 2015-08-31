@@ -16,4 +16,7 @@ public interface LaptopRepository extends CrudRepository<Laptop, Long> {
 
     List<Laptop> findLaptopsByRazotajs(@Param("razotajs") String razotajs);
     List<Laptop> findLaptopsByAktualaCena(@Param("aktualaCena") double aktualaCena);
+
+//    @Query("FROM laptop WHERE aktualaCena >= ?1 AND aktualaCena <= ?2")
+    List<Laptop> findByaktualaCenaBetween(Double apaksejaRobeza, Double augsejaRobeza);
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -38,6 +39,18 @@ public class MainController {
         Laptop laptop1 = scrap.scrapPage("http://www.1a.lv/datortehnika/portativiedatori/" + laptop);
         laptopRepository.save(laptop1);
         return laptop1;
-
     }
+
+    @RequestMapping(value = "/laptops/{razotajs}", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Laptop> findLaptopsByRazotajs(@PathVariable("razotajs") String razotajs) {
+        return laptopRepository.findLaptopsByRazotajs(razotajs);
+    }
+
+    @RequestMapping(value = "/laptops/{cena}/{cena2}", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Laptop> findByaktualaCena(@PathVariable("cena") Double cena, @PathVariable("cena2") Double cena2) {
+        return laptopRepository.findByaktualaCenaBetween(cena, cena2);
+    }
+
 }
