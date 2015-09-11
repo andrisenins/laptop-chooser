@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
- * Created by andris on 15.23.8.
+ * Created by Andris on 15.23.8.
  */
 @Entity
 @JsonInclude(JsonInclude.Include.NON_NULL)

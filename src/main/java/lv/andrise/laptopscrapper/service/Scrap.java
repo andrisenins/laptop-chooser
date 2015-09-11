@@ -1,6 +1,9 @@
 package lv.andrise.laptopscrapper.service;
 
+import com.google.common.collect.Sets;
 import lv.andrise.laptopscrapper.model.Laptop;
+import lv.andrise.laptopscrapper.model.LaptopPrice;
+import lv.andrise.laptopscrapper.model.repositories.LaptopPriceRepository;
 import lv.andrise.laptopscrapper.model.repositories.LaptopRepository;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -12,21 +15,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by andris on 15.24.8.
+ * Created by Andris on 15.24.8.
  */
 @Service
 public class Scrap {
 
     @Autowired
     private LaptopRepository laptopRepository;
+
+    @Autowired
+    private LaptopPriceRepository laptopPriceRepository;
 
     private final Logger log = LoggerFactory.getLogger(Scrap.class);
 
@@ -42,11 +45,23 @@ public class Scrap {
     private final Pattern priceRegex = Pattern.compile(moneyRegex);
 
     public Set<Laptop> getLaptops() {
-        Set<Laptop> laptopList = new HashSet<>();
+        Set<Laptop> laptopList = Sets.newConcurrentHashSet();
         Set<String> urls = scrapPageList();
         urls.parallelStream().forEach(s -> laptopList.add(scrapPage(s)));
-        laptopRepository.save(laptopList);
+        saveLaptops(laptopList);
         return laptopList;
+    }
+
+    public boolean saveLaptops(Set<Laptop> laptops) {
+        for (Laptop laptop : laptops) {
+            List<Laptop> laptopsByNosaukums = laptopRepository.findLaptopsByNosaukums(laptop.getNosaukums());
+            if (laptopsByNosaukums.isEmpty()) {
+                laptopRepository.save(laptop);
+            } else {
+                laptopPriceRepository.save(new LaptopPrice(laptopsByNosaukums.get(0).getId(), laptop.getAktualaCena(), new Date()));
+            }
+        }
+        return true;
     }
 
     public Laptop scrapPage(String url) {
@@ -140,10 +155,11 @@ public class Scrap {
                         case 19:
                             laptop.setRamType(splitColumns[1].substring(8).trim());
                             break;
-                        case 20: if(splitColumns[1].substring(8).trim().equals("Nav") || splitColumns[1].substring(8).trim().equals("Nav informācijas"))
-                            laptop.setRamSlots(0);
+                        case 20:
+                            if (splitColumns[1].substring(8).trim().equals("Nav") || splitColumns[1].substring(8).trim().equals("Nav informācijas"))
+                                laptop.setRamSlots(0);
                             else
-                            laptop.setRamSlots(Integer.parseInt(splitColumns[1].substring(8).trim()));
+                                laptop.setRamSlots(Integer.parseInt(splitColumns[1].substring(8).trim()));
                             break;
                         case 22:
                             laptop.setHDDSize(splitColumns[1].substring(8).trim());
@@ -284,7 +300,7 @@ public class Scrap {
     private Set<String> scrapPageList() {
         log.debug("Starting scrapping!");
         String url = "http://www.1a.lv/datortehnika/portativiedatori/";
-        Set<String> urls = new HashSet<>();
+        Set<String> urls = Sets.newConcurrentHashSet();
 
         return getUrls(url, urls);
     }
@@ -324,13 +340,12 @@ public class Scrap {
     }
 
     private Set<String> pagesToScan(Integer quantity) {
-        Set<String> urls = new HashSet<>();
-        int pages = 0;
+        Set<String> urls = Sets.newConcurrentHashSet();
+        int pages;
         if (quantity % 12 != 0) {
             pages = quantity / 12 + 1;
-        }
-        else {
-            pages = quantity / 12 ;
+        } else {
+            pages = quantity / 12;
         }
         for (int i = 1; i <= pages; i++) {
             urls.add("http://www.1a.lv/datortehnika/portativiedatori/" + (i + 1));
@@ -339,7 +354,7 @@ public class Scrap {
     }
 
     private Integer allProductsOfThisType(Elements pcQuantity) {
-        Set<Integer> splitMessage = new HashSet<>();
+        Set<Integer> splitMessage = Sets.newConcurrentHashSet();
         Integer max = 0;
         for (Element element : pcQuantity) {
             Matcher matcher = pcQ.matcher(element.toString());

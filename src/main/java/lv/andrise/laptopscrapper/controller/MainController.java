@@ -4,20 +4,19 @@ import lv.andrise.laptopscrapper.model.Laptop;
 import lv.andrise.laptopscrapper.model.repositories.LaptopRepository;
 import lv.andrise.laptopscrapper.service.Scrap;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
 /**
- * Created by andris on 15.23.8.
+ * Created by Andris on 15.23.8.
  */
-@Controller
+@RestController
 public class MainController {
 
     @Autowired
@@ -28,13 +27,11 @@ public class MainController {
 
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
-    @ResponseBody
     public Set<Laptop> doStuff() throws IOException {
         return scrap.getLaptops();
     }
 
     @RequestMapping(value = "/scrap/{laptop}", method = RequestMethod.GET)
-    @ResponseBody
     public Laptop scrapPageSinglePage(@PathVariable("laptop") String laptop) throws IOException {
         Laptop laptop1 = scrap.scrapPage("http://www.1a.lv/datortehnika/portativiedatori/" + laptop);
         laptopRepository.save(laptop1);
@@ -42,15 +39,21 @@ public class MainController {
     }
 
     @RequestMapping(value = "/laptops/{razotajs}", method = RequestMethod.GET)
-    @ResponseBody
     public List<Laptop> findLaptopsByRazotajs(@PathVariable("razotajs") String razotajs) {
         return laptopRepository.findLaptopsByRazotajs(razotajs);
     }
 
     @RequestMapping(value = "/laptops/{cena}/{cena2}", method = RequestMethod.GET)
-    @ResponseBody
     public List<Laptop> findByaktualaCena(@PathVariable("cena") Double cena, @PathVariable("cena2") Double cena2) {
         return laptopRepository.findByaktualaCenaBetween(cena, cena2);
     }
+
+//    @RequestMapping(value = "/laptops/{ekranaIzmers}/{maksIzskirtspeja}/{procesoraSaime}/{procesoraPaaudze}", method = RequestMethod.GET)
+//    public List<Laptop> findByEkranaIzmersAndOrMaksIzskirtspejaAndOrProcesoraSaimeAndOrProcesoraPaaudze(
+//            @PathVariable ("ekranaIzmers") String ekranaIzmers, @PathVariable ("maksIzskirtspeja") String maksIzskirtspeja,
+//            @PathVariable ("procesoraSaime") String procesoraSaime, @PathVariable ("procesoraPaaudze") String procesoraPaaudze) {
+//
+//        return laptopRepository.findByekranaIzmersAndmaksIzskirtspejaAndprocesoraSaimeAndprocesoraPaaudze(ekranaIzmers, maksIzskirtspeja, procesoraSaime, procesoraPaaudze);
+//    }
 
 }
