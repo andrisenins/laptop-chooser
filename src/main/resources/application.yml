@@ -1,2 +1,19 @@
 server.port: 8080
 logging.level.lv.andrise.laptopscrapper: DEBUG
+spring:
+  datasource:
+    url: jdbc:mysql://localhost/laptopscrapper?characterEncoding=UTF-8
+    username: laptopscrapper
+    password: laptopscrapperdev
+    driver-class-name: com.mysql.jdbc.Driver
+  jpa.hibernate.ddl-auto: update #create-drop
+# Hibernate
+hibernate:
+  dialect: org.hibernate.dialect.MySQL5Dialect
+  show_sql: true
+  hbm2ddl.auto: create
+  connection:
+    CharSetconnection: UTF-8
+    characterEncoding: utf8
+    useUnicode: true
+entitymanager.packagesToScan: lv.andrise.laptopscrapper.model

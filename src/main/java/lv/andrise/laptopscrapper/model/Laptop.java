@@ -2,7 +2,13 @@ package lv.andrise.laptopscrapper.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import java.util.Date;
 
 /**
@@ -10,11 +16,13 @@ import java.util.Date;
  */
 @Entity
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Table(name = "laptops")
 public class Laptop {
 
     @Id
-    @SequenceGenerator(name = "laptop_id_seq", sequenceName = "laptop_id_seq", initialValue = 1, allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "laptop_id_seq")
+//    @SequenceGenerator(name = "laptop_id_seq", sequenceName = "laptop_id_seq", initialValue = 1, allocationSize = 1)
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "laptop_id_seq")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String nosaukums;
     private String razotajs;

@@ -11,10 +11,12 @@ import java.util.Date;
 
 @Entity
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Table(name = "laptopprices")
 public class LaptopPrice {
     @Id
-    @SequenceGenerator(name = "laptopprice_id_seq", sequenceName = "laptopprice_id_seq", initialValue = 1, allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "laptopprice_id_seq")
+//    @SequenceGenerator(name = "laptopprice_id_seq", sequenceName = "laptopprice_id_seq", initialValue = 1, allocationSize = 1)
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "laptopprice_id_seq")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private long laptopId;
     private double aktualaCena;
