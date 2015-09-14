@@ -1,6 +1,7 @@
 package lv.andrise.laptopscrapper.controller;
 
 import lv.andrise.laptopscrapper.model.Laptop;
+import lv.andrise.laptopscrapper.model.PricesDAO;
 import lv.andrise.laptopscrapper.model.repositories.LaptopRepository;
 import lv.andrise.laptopscrapper.service.Scrap;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class MainController {
 
     @Autowired
     private LaptopRepository laptopRepository;
+
+    @Autowired
+    private PricesDAO pricesDAO;
 
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
@@ -56,4 +60,8 @@ public class MainController {
 //        return laptopRepository.findByekranaIzmersAndmaksIzskirtspejaAndprocesoraSaimeAndprocesoraPaaudze(ekranaIzmers, maksIzskirtspeja, procesoraSaime, procesoraPaaudze);
 //    }
 
+    @RequestMapping(value = "/laptopspricelist/{id}", method = RequestMethod.GET)
+    public List<Double> findLaptopPricesById(@PathVariable("id") Long id) {
+        return pricesDAO.allPricesByLaptopId(id);
+    }
 }
